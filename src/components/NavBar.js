@@ -1,16 +1,21 @@
 import React, { useContext } from 'react'
-import {Link, NavLink, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { AuthContext } from '../features/login-register/AuthContext';
-import ToggleCurrency from '../features/ToggleCurrency';
-import { ShoppingCartContext } from './store/ShoppingCartContext';
+import ToggleCurrency from '../components/currency/ToggleCurrency';
+import { ShoppingCartContext } from './store/shopping_cart/ShoppingCartContext';
+import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { FaShoppingCart } from 'react-icons/fa';
+import { BsPeopleCircle } from "react-icons/bs";
+import {SiFoursquare} from 'react-icons/si'
+
+import './NavBar.css'
 
 export default function NavBar() {
     const history = useHistory();
     const {isAuthenticated, user} = useContext(AuthContext)
-    const {openShoppingCart} = useContext(ShoppingCartContext)
+    const {openShoppingCart, productsToCart} = useContext(ShoppingCartContext)
 
     function handleLogout(e) {
         e.preventDefault();
@@ -23,43 +28,33 @@ export default function NavBar() {
     }
 
     return (
-        <nav className="navbar navbar-expand navbar-dark bg-dark ">
-            <div className="container">
-                <Link className="navbar-brand" to='/home' >Navbar</Link>
-                <ul className="navbar-nav w-100 ">
-                    <li className='nav-item'>
-                        <NavLink className="nav-link" exact to="/store" >Home</NavLink>  
-                    </li>
-
-                    {isAuthenticated ? (
-                        <>
-                            <li className='nav-item'>
-                                <NavLink className="nav-link" exact to="/myproducts">My Products</NavLink>
-                            </li>
-                            <li className='nav-item'>
-                                <NavLink className="nav-link" exact to="/addproduct">Add New Product</NavLink>
-                            </li>
-                            <li className='nav-item d-flex align-items-center'><span className='nav-link'>Welcome {user.email}</span>
-                                <a className="nav-link" href="/" onClick={handleLogout} >Logout</a>
-                            </li>
-                            <li className='nav-item d-flex align-items-center'>
-                                <button onClick={openShoppingCart} >{ <FaShoppingCart color='orange' /> }</button>
-                            </li>
-                            <ToggleCurrency />
-                        </>    
-                    ) : (
-                        <>
-                            <li className='nav-item'> 
-                                <NavLink className="nav-link" exact to="/login">Login</NavLink>
-                            </li>
-                            <li className='nav-link'>|</li>
-                            <li className='nav-item'>
-                                <NavLink className="nav-link" exact to="/register">Register</NavLink>
-                            </li>
-                        </>
-                    )}
-                </ul>
-            </div>
-        </nav>
+        <Navbar collapseOnSelect expand="md" bg="dark" variant="dark" className='sticky-top mb-4 w-100'>
+                <Container>
+                    <Navbar.Brand href="/store"><SiFoursquare />Shopping</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav defaultActiveKey='/' className='w-100'>
+                        {isAuthenticated ? (
+                            <>
+                                <Nav.Link onClick={openShoppingCart} eventKey="link-2" className='ml-md-auto'><FaShoppingCart size='30'/>
+                                    {productsToCart.length > 0 && <span className="badge badge-danger">{productsToCart.length}</span>}
+                                </Nav.Link>
+                                <NavDropdown className='dropdown nav-item' title={ <><BsPeopleCircle size='30' /><span >{user.email}</span></> }>
+                                        <Nav.Link className='dropdown-text' >Change Currency: <ToggleCurrency /></Nav.Link>
+                                        <Nav.Link className='dropdown-text' href="/myproducts">Manage my products</Nav.Link>
+                                        <Nav.Link className='dropdown-text' href="/addproduct">Add new Product</Nav.Link>
+                                        <Nav.Link className='dropdown-text' onClick={handleLogout}>Logout</Nav.Link>
+                                </NavDropdown>
+                            </>
+                        ): (
+                            <NavDropdown className='ml-md-auto' title={ <BsPeopleCircle size='30' /> }>
+                                    <Nav.Link className='dropdown-text' href="/login">Login</Nav.Link>
+                                    <Nav.Link className='dropdown-text' href="/register">Register</Nav.Link>
+                            </NavDropdown>
+                        )}
+                    </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
     )
 }

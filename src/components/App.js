@@ -7,14 +7,17 @@ import Store from './store/Store';
 import Authentification from '../features/login-register/Authentification';
 import {AuthContextProvider} from '../features/login-register/AuthContext'
 
+import AddNewProduct from './my_store/AddNewProduct';
+import MyProducts from './my_store/MyProducts';
+import EditProduct from './my_store/EditProduct';
+import ShoppingCart from './store/shopping_cart/ShoppingCart';
+import { CurrencyContextProvider } from '../components/currency/CurrencyContext';
+import { ShoppingCartContextProvider } from './store/shopping_cart/ShoppingCartContext';
+// import Header from './Header';
+
 import 'bootstrap/dist/css/bootstrap.css';
-import AddNewProduct from './store/AddNewProduct';
-import MyProducts from './store/MyProducts';
-import EditProduct from './store/EditProduct';
-import ProductDetails from './ProductDetails';
-import ShoppingCart from './store/ShoppingCart';
-import { CurrencyContextProvider } from '../features/CurrencyContext';
-import { ShoppingCartContextProvider } from './store/ShoppingCartContext';
+import './App.css'
+import Footer from './Footer';
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_apiKey,
@@ -33,18 +36,22 @@ export default function App() {
         <AuthContextProvider>
             <CurrencyContextProvider>
                 <ShoppingCartContextProvider>
-                        <Router>
-                            <NavBar />
-                            <div className='container'>
-                                <Route exact path='/store' component={Store} />
-                                <Route exact path='/store/:id' component={ProductDetails} />
-                                <Route exact path='/myproducts' component={MyProducts} />
-                                <Route exact path='/myproducts/:id' component={EditProduct} />
-                                <Route exact path='/addproduct' component={AddNewProduct} />
-                                <Route exact path='/login' component={Authentification} />
-                                <Route exact path='/register' component={Authentification} />
-                            </div>
-                        </Router>
+
+                        <div className='page-container'>
+                            <Router>
+                                <NavBar />
+                                {/* <Header /> */}
+                                <div className='container'>
+                                    <Route exact path='/store' component={Store} />
+                                    <Route exact path='/myproducts' component={MyProducts} />
+                                    <Route exact path='/myproducts/:id' component={EditProduct} />
+                                    <Route exact path='/addproduct' component={AddNewProduct} />
+                                    <Route exact path='/login' component={Authentification} />
+                                    <Route exact path='/register' component={Authentification} />
+                                </div>
+                            </Router>
+                        </div>
+                        <Footer />
                     <ShoppingCart />
                 </ShoppingCartContextProvider>
             </CurrencyContextProvider>

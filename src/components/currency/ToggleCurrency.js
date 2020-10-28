@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
+import { GiTwoCoins } from 'react-icons/gi';
 import { CurrencyContext } from './CurrencyContext'
 
 export default function ToggleCurrency() {
@@ -15,7 +16,7 @@ export default function ToggleCurrency() {
     }
 
     return (
-        <select value={value} onChange={handleCurrencyChange}>
+        <select title={<GiTwoCoins size='30' />} value={value} onChange={handleCurrencyChange}>
             <option value="RON">RON</option>
             <option value="EUR">EUR</option>
             <option value="GBP">GBP</option>

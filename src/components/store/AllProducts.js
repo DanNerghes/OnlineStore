@@ -1,62 +1,83 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Link } from 'react-router-dom';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import { AuthContext } from '../../features/login-register/AuthContext';
-import { CurrencyContext} from '../../features/CurrencyContext'
-import { roundUp } from '../../helpers'
-import {ShoppingCartContext} from './ShoppingCartContext'
+import { CurrencyContext} from '../currency/CurrencyContext'
+import { roundUp } from '../../utils/helpers'
+import {ShoppingCartContext} from './shopping_cart/ShoppingCartContext'
 
-export default function AllProducts({selectedCategory}) {
+export default function AllProducts({selectedCategory, filterProducts}) {
 
     const db = firebase.firestore();
     const [products, setProducts] = useState([])
     const {user} = useContext(AuthContext)
-    const { handleAddToCart } = useContext(ShoppingCartContext)
+    const { handleAddToCart, productsToCart, handleRemoveFromCart } = useContext(ShoppingCartContext)
     const {currencyExchange} = useContext(CurrencyContext);
 
-
+    
     useEffect(() => {
         const items = []
         db.collection("products").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 items.push( {...doc.data(), id:doc.id} )
             });
-            !selectedCategory || selectedCategory === 'All' ?
-            setProducts(items) :
-            setProducts(items.filter(products => products.productCategory === selectedCategory))
+        !selectedCategory || selectedCategory === 'All' ?
+        setProducts(items) :
+        setProducts(items.filter(products => products.productCategory === selectedCategory))
         });
     }, [db, selectedCategory])
 
+    
     if(!user){
         return (
-            <>
-            { products.map(product => 
-                (<div className="card col-3 mt-2" key={product.id}>
-                    <img className="card-img-top" src={product.imgUrl} alt={product.productName} />
-                    <div className="card-body">
-                        <h5 className="card-title">{product.productName}</h5>
+            <div className='row justify-content-center align-items-stretch'>
+            { products.map(product => (
+                <div className='col-3-lg col-4-md col-6-sm ml-3 mr-3' style={{width:'13rem'}} key={product.id}>
+                    <div className="card mt-3 mb-2 p-3 " style={{ boxShadow:'0 5px 5px 0'}}>
+                        <div style={{height:'200px'}}>
+                            <img className="card-img-top" src={product.imgUrl} alt={product.productName} />
+                        </div>
+                        <div className="card-body p-0 m-0">
+                            <h6 className="card-title mt-2">{product.productName}</h6>
+                        </div>
                     </div>
-                </div>)
-            )} 
-        </> 
+                </div>
+            ))} 
+            </div>
         )
     }   
-    
+
     return (       
-        <>
-            { products.filter(product => product.owner !== user.email).map(product => 
-                
-                (<div className="card mt-2 col-3" key={product.id}>
-                    <img className="card-img-top" src={product.imgUrl} alt={product.productName} />
-                    <div className="card-body">
-                        <h5 className="card-title">{product.productName}</h5>
-                        <p className="card-text">{ roundUp( product.price * currencyExchange.rate) } {currencyExchange.currency} / {product.unitMeasurement} </p>
-                        <button className='btn btn-primary' onClick={() => handleAddToCart(product)}>Add to cart</button>
-                        <Link className='btn btn-primary' to={`/store/${product.id}`} >View Details</Link>
+        <div className='row justify-content-center align-items-stretch'>
+            { products.filter(product => product.owner !== user.email && product.productName.toLowerCase().includes(filterProducts)).map(product =>                 
+                (<div className='col-3-lg col-4-md col-6-sm ml-3 mr-3' style={{width:'13rem'}} key={product.id}>
+                    <div className="card mt-3 mb-2 p-3 " style={{ boxShadow:'0 5px 5px 0'}}>
+                        <div style={{height:'200px'}}>
+                            <img className="card-img-top" src={product.imgUrl} alt={product.productName} />
+                        </div>
+                        <div className="card-body p-0 m-0">
+                            <h6 className="card-title mt-2">{product.productName}</h6>
+                            <small className="card-text">{ roundUp( product.price * currencyExchange.rate) } {currencyExchange.currency} / {product.unitMeasurement} </small>
+                            <br/><br/>
+                            <div>
+                                <button className='btn btn-success' 
+                                    onClick={() => handleAddToCart(product)} 
+                                    disabled={productsToCart.find(item => item.id === product.id)}
+                                >+</button>
+                                {productsToCart.find(item => item.id === product.id) && (
+                                    <>
+                                        <small className="alert alert-success p-2" role="alert">Added to cart!</small>
+                                        <button className='btn btn-danger' 
+                                        onClick={() => handleRemoveFromCart(product.id)} 
+                                        >-</button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>)
             )} 
-        </>    
-            )
+        </div>    
+    )
 }
+        

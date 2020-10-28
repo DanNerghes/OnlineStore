@@ -3,8 +3,8 @@ import * as firebase from 'firebase/app';
 import { useParams } from 'react-router-dom';
 import 'firebase/firestore';
 import 'firebase/storage';
-import { roundUp } from '../helpers';
-import { CurrencyContext} from '../features/CurrencyContext'
+import { roundUp } from '../../utils/helpers';
+import { CurrencyContext} from '../currency/CurrencyContextS'
 
 export default function ProductDetails() {
     const db = firebase.firestore();

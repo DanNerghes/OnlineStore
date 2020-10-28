@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { roundUp } from '../../../utils/helpers'
+import { CurrencyContext } from '../../currency/CurrencyContext';
 
 const defaultValue = {
     open: false
@@ -9,8 +11,10 @@ const ShoppingCartContext = React.createContext(defaultValue)
 const dataFromStorage = JSON.parse(localStorage.getItem('shoppingCart'))
 
 function ShoppingCartContextProvider({children}) {
+    const {currencyExchange} = useContext(CurrencyContext);
     const [shoppingCart, setShoppingCart] = useState(defaultValue)
     const [productsToCart, setProductsToCart] = useState(dataFromStorage)
+    const [total, setTotal] = useState(0)
 
 
     function openShoppingCart() {
@@ -52,17 +56,27 @@ function ShoppingCartContextProvider({children}) {
     function handleRemoveFromCart(id) {
         const cloneCart = [...productsToCart]
         const newCart = cloneCart.filter(item => item.id !== id);
-        console.log(newCart);
         setProductsToCart(newCart)
     }
 
     useEffect(() => {
         localStorage.setItem('shoppingCart', JSON.stringify(productsToCart))
     }, [ productsToCart])
+
+    useEffect(() => {
+        if(productsToCart) {
+            const prods = [...productsToCart]
+            const calcTotal = prods.reduce( (acc, item) => { 
+                return acc + (item.inShoppingCart * roundUp(item.price * currencyExchange.rate))
+            }, 0)
+            setTotal(calcTotal)
+        }
+    }, [productsToCart, currencyExchange.rate])
     
     return (
         <ShoppingCartContext.Provider value={ {shoppingCart, 
         productsToCart, 
+        total,
         openShoppingCart, 
         closeShoppingCart, 
         handleAddToCart, 

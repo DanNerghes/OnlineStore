@@ -32,7 +32,7 @@ export default function Footer() {
                 </div>
                 <hr />
                 <div className='row'>
-                    <p className='col-sm'> &copy;{new Date().getFullYear()} <SiFoursquare />Shopping | All rights reserved</p>
+                    <p className='col-sm'> &copy;{new Date().getFullYear()} <SiFoursquare />Store | All rights reserved</p>
                 </div>
             </div>
         </div>

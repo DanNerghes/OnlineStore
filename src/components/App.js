@@ -36,22 +36,21 @@ export default function App() {
         <AuthContextProvider>
             <CurrencyContextProvider>
                 <ShoppingCartContextProvider>
-
-                        <div className='page-container'>
-                            <Router>
-                                <NavBar />
-                                {/* <Header /> */}
-                                <div className='container'>
-                                    <Route exact path='/store' component={Store} />
-                                    <Route exact path='/myproducts' component={MyProducts} />
-                                    <Route exact path='/myproducts/:id' component={EditProduct} />
-                                    <Route exact path='/addproduct' component={AddNewProduct} />
-                                    <Route exact path='/login' component={Authentification} />
-                                    <Route exact path='/register' component={Authentification} />
-                                </div>
-                            </Router>
-                        </div>
-                        <Footer />
+                    <div className='page-container'>
+                        <Router>
+                            <NavBar />
+                            {/* <Header /> */}
+                            <div className='container'>
+                                <Route exact path='/store' component={Store} />
+                                <Route exact path='/myproducts' component={MyProducts} />
+                                <Route exact path='/myproducts/:id' component={EditProduct} />
+                                <Route exact path='/addproduct' component={AddNewProduct} />
+                                <Route exact path='/login' component={Authentification} />
+                                <Route exact path='/register' component={Authentification} />
+                            </div>
+                        </Router>
+                    </div>
+                    <Footer />
                     <ShoppingCart />
                 </ShoppingCartContextProvider>
             </CurrencyContextProvider>

@@ -37,8 +37,8 @@ export default function AllProducts({selectedCategory, filterProducts}) {
                         <div style={{height:'200px'}}>
                             <img className="card-img-top" src={product.imgUrl} alt={product.productName} />
                         </div>
-                        <div className="card-body p-0 m-0">
-                            <h6 className="card-title mt-2">{product.productName}</h6>
+                        <div style={{height:'30px'}} className='mb-4'>
+                            <h6 className="card-title mt-2  pb-5">{product.productName}</h6>
                         </div>
                     </div>
                 </div>
@@ -56,8 +56,10 @@ export default function AllProducts({selectedCategory, filterProducts}) {
                             <img className="card-img-top" src={product.imgUrl} alt={product.productName} />
                         </div>
                         <div className="card-body p-0 m-0">
-                            <h6 className="card-title mt-2">{product.productName}</h6>
-                            <small className="card-text">{ roundUp( product.price * currencyExchange.rate) } {currencyExchange.currency} / {product.unitMeasurement} </small>
+                            <div style={{height:'30px'}} className='mb-4'>
+                                <h6 className="card-title mt-2">{product.productName}</h6>
+                            </div>
+                            <small className="card-text">{ roundUp( product.price * currencyExchange.rate) } {currencyExchange.currency} </small>
                             <br/><br/>
                             <div>
                                 <button className='btn btn-success' 

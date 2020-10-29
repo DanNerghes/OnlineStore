@@ -14,7 +14,6 @@ const initialValues = {
     productName: '', 
     productCategory: '', 
     price: '',
-    unitMeasurement:'',
     availableInStock:''
 }
 
@@ -22,7 +21,6 @@ const validationRules = {
     productName: [{ type: 'required' }],
     productCategory: [{ type: 'required'}],
     price: [{type: 'required'}],
-    unitMeasurement: [{type: 'required'}],
     availableInStock: [{type: 'required'}],
 };
 
@@ -54,7 +52,6 @@ export default function AddNewProduct() {
                         productCategory: values.productCategory,
                         price: values.price / currencyExchange.rate,
                         availableInStock: values.availableInStock,
-                        unitMeasurement: values.unitMeasurement,
                         inShoppingCart: 1
                     })
                     history.push("/myproducts");
@@ -120,23 +117,7 @@ export default function AddNewProduct() {
                                     <div className="invalid-feedback">{errors.price}</div>
                                 </div>
                             </div>
-                            <div className="form-group col-10 col-md-6 col-auto">
-                                <label className='sr-only' htmlFor="unitMeasurement">UM</label>
-                                <div className="input-group mb-2">
-                                    <div className="input-group-append">
-                                        <div className="input-group-text">UM</div>
-                                    </div>
-                                    <select id="unitMeasurement" 
-                                        className={ `form-control ${errors.unitMeasurement && ' is-invalid'}` } 
-                                        {...inputProps('unitMeasurement')} >
-                                        <option ></option>
-                                        <option >pc</option>
-                                        <option>Kg</option>
-                                    </select>
-                                    <div className="invalid-feedback">{errors.unitMeasurement}</div>
-                                </div>
-                            </div>
-                            <div className="form-group col-10 col-md-6 col-auto">
+                            <div className="form-group col-12 col-md-7 col-auto">
                                 <label className='sr-only' htmlFor="availableInStock">Available</label>
                                 <div className="input-group mb-2">
                                     <div className="input-group-append">

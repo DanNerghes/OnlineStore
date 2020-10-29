@@ -28,9 +28,9 @@ export default function NavBar() {
     }
 
     return (
-        <Navbar collapseOnSelect expand="md" bg="dark" variant="dark" className='sticky-top mb-4 w-100'>
+        <Navbar collapseOnSelect expand="md" bg="dark" variant="dark" className='sticky-top w-100 mb-4'>
                 <Container>
-                    <Navbar.Brand href="/store"><SiFoursquare />Shopping</Navbar.Brand>
+                    <Navbar.Brand href="/store"><SiFoursquare />Store</Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav defaultActiveKey='/' className='w-100'>

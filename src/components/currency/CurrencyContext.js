@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-const defaultValue = {
+const defaultValue = JSON.parse(localStorage.getItem('currency')) || {
     currency: 'RON',
     rate: 1
 }
@@ -21,6 +21,10 @@ function CurrencyContextProvider({children}) {
         });
         return data.rates[newCurrency];
     }
+
+    useEffect(() => {
+        localStorage.setItem('currency', JSON.stringify(currencyExchange))
+    }, [ currencyExchange])
 
     return (
         <CurrencyContext.Provider value={ {currencyExchange, changeCurrency} }>

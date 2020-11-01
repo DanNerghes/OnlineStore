@@ -6,13 +6,24 @@ import { CurrencyContext} from '../currency/CurrencyContext'
 import { roundUp } from '../../utils/helpers'
 import {ShoppingCartContext} from './shopping_cart/ShoppingCartContext'
 
-export default function AllProducts({selectedCategory, filterProducts}) {
+export default function AllProducts({selectedCategory,
+        filterProducts, 
+        setProductsOnPage, 
+        setAllProducts, 
+        productsOnPage,  
+        pageSelected, 
+        productsPerPage, 
+        setPageSelected}) {
 
     const db = firebase.firestore();
     const [products, setProducts] = useState([])
     const {user} = useContext(AuthContext)
     const { handleAddToCart, productsToCart, handleRemoveFromCart } = useContext(ShoppingCartContext)
     const {currencyExchange} = useContext(CurrencyContext);
+
+    // const productsPerPage = 2;
+    const lastProductOnPage = pageSelected * productsPerPage;
+    const firstProduct = lastProductOnPage - productsPerPage;
 
     
     useEffect(() => {
@@ -21,17 +32,23 @@ export default function AllProducts({selectedCategory, filterProducts}) {
             querySnapshot.forEach((doc) => {
                 items.push( {...doc.data(), id:doc.id} )
             });
-        !selectedCategory || selectedCategory === 'All' ?
-        setProducts(items) :
-        setProducts(items.filter(products => products.productCategory === selectedCategory))
+            !selectedCategory || selectedCategory === 'All' ?
+            setProducts(items) :
+            setProducts(items.filter(products => products.productCategory === selectedCategory))
         });
     }, [db, selectedCategory])
-
     
+    useEffect( () => {
+        setAllProducts(products)
+        const prod = products.slice(firstProduct, lastProductOnPage)
+        setProductsOnPage(prod)
+
+    } ,[products, firstProduct, lastProductOnPage, setAllProducts, setProductsOnPage] )
+
     if(!user){
         return (
             <div className='row justify-content-center align-items-stretch'>
-            { products.map(product => (
+            { productsOnPage.map(product => (
                 <div className='col-3-lg col-4-md col-6-sm ml-3 mr-3' style={{width:'13rem'}} key={product.id}>
                     <div className="card mt-3 mb-2 p-3 " style={{ boxShadow:'0 5px 5px 0'}}>
                         <div style={{height:'200px'}}>

@@ -1,21 +1,19 @@
 import React from 'react'
 
-export default function Pagination({products, setPageSelected, productsPerPage}) {
+export default function Pagination({products, itemsOnPage, setPageSelected}) {
 
     const numberOfPage = []
 
     function handleChangeThePage(page) {
-        console.log(page);
         setPageSelected(page)
     }
 
-    for(let i = 1; i <= Math.ceil(products.length / productsPerPage) ; i++) {
-        console.log(products);
+    for(let i = 1; i <= Math.ceil(products.length / itemsOnPage) ; i++) {
         numberOfPage.push(i)
     }
 
     return (
-        <nav className='mt-4'>
+        <nav className='mt-4 d-flex justify-content-center w-100'>
             <ul className='pagination'>
                 {numberOfPage.map( number => {
                 return (<li key={number} className='page-item'>

@@ -15,7 +15,7 @@ export default function AllProducts({selectedCategory, filterProducts}) {
     const { handleAddToCart, productsToCart, handleRemoveFromCart } = useContext(ShoppingCartContext)
     const {currencyExchange} = useContext(CurrencyContext);
 
-    const itemsOnPage = 2;
+    const itemsOnPage = 6;
     const [itemsToPaginate, setItemsToPaginate] = useState([]);
     const [pageSelected, setPageSelected] = useState(1);
     const lastProductOnPage = pageSelected * itemsOnPage;
@@ -28,11 +28,12 @@ export default function AllProducts({selectedCategory, filterProducts}) {
             querySnapshot.forEach((doc) => {
                 items.push( {...doc.data(), id:doc.id} )
             });
+            setPageSelected(1);
             !selectedCategory || selectedCategory === 'All' ?
-            setProducts(items) :
-            setProducts(items.filter(products => products.productCategory === selectedCategory))
+            setProducts(items.filter(products => products.productName.toLowerCase().includes(filterProducts))) :
+            setProducts(items.filter(products => products.productCategory === selectedCategory && products.productName.toLowerCase().includes(filterProducts)))
         });
-    }, [db, selectedCategory])
+    }, [db, selectedCategory, filterProducts, setPageSelected])
     
     useEffect( () => {
         const prod = products.slice(firstProduct, lastProductOnPage)
@@ -64,7 +65,7 @@ export default function AllProducts({selectedCategory, filterProducts}) {
     return (       
             <>
                 <div className='row justify-content-center align-items-stretch'>
-                    { itemsToPaginate.filter(product => product.owner !== user.email && product.productName.toLowerCase().includes(filterProducts)).map(product =>                 
+                    { itemsToPaginate.filter(product => product.owner !== user.email).map(product =>                 
                         (<div className='col-3-lg col-4-md col-6-sm ml-3 mr-3' style={{width:'13rem'}} key={product.id}>
                             <div className="card mt-3 mb-2 p-3 " style={{ boxShadow:'0 5px 5px 0'}}>
                                 <div style={{height:'200px'}}>

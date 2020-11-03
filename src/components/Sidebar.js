@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
-import { Form, FormControl, Nav } from 'react-bootstrap';
+import { Form, FormControl, Nav, Navbar, NavItem } from 'react-bootstrap';
 import { BsSearch } from 'react-icons/bs';
 import useForm from '../utils/useForm';
 import {AuthContext} from '../features/login-register/AuthContext'
+import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
 
 const initialValues={filter:''}
 
@@ -41,24 +42,29 @@ export default function Sidebar({setSelectedCategory, setFilterProducts}) {
 
     return (
         <>
-            <Nav className='flex-column' title='Categories'>
-                {user && (
-                    <Form className='d-flex' >
-                        <span className='mr-2'><BsSearch  size='20'/></span>
-                        <FormControl type="text" 
-                            placeholder="Search" 
-                            className="mr-sm-2"
-                            {...inputProps('filter')}/>
-                    </Form>
-                )}
-                <br/>
-                <h5>Categories: </h5>
-                {allCategories.map( obj => {
-                    return (
-                        <Nav.Link variant='pills' key={obj} onClick={() => setSelectedCategory(obj)}>{obj}</Nav.Link>
-                    )
-                })}
-            </Nav>
+            <Navbar collapseOnSelect expand="md" className='flex-column navbar-collapse' title='Categories'>
+                <NavbarCollapse id="responsive-navbar-nav"></NavbarCollapse>
+                    <NavItem>
+                        {user && (
+                            <Form className='d-flex' >
+                                <span className='mr-2'><BsSearch  size='20'/></span>
+                                <FormControl type="text" 
+                                    placeholder="Search" 
+                                    className="mr-sm-2"
+                                    {...inputProps('filter')}/>
+                            </Form>
+                        )}
+                    </NavItem>
+                    <br/>
+                    <NavItem>
+                        <h5>Categories: </h5>
+                        {allCategories.map( obj => {
+                            return (
+                                <Nav.Link variant='pills' key={obj} onClick={() => setSelectedCategory(obj)}>{obj}</Nav.Link>
+                            )
+                        })}
+                    </NavItem>
+            </Navbar>
         </>
     )
 }
